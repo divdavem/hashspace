@@ -1,0 +1,31 @@
+var msg={text:""}, count=-1, $set=require("hsp/$set");
+
+# template message(msg)
+    <div title="click me!" onclick="{changeMessage()}" onselectstart="return false">
+        {if msg.isWarning}<div class="warning">WARNING: </div>{/if}
+        {msg.text}
+    </div>
+# /template
+
+function changeMessage() {
+    count++;
+    switch(count%3) {
+        case 0:
+            $set(msg,"isWarning",false);
+            $set(msg,"text","Click me to discover hashspace event hanlders");
+            break;
+        case 1:
+            $set(msg,"text","Well done - you called the event handler and updated the data model in a row!");
+            break;
+        case 2:
+            $set(msg,"isWarning",true);
+            $set(msg,"text","If you click again you will be back to first step!");
+            break;
+    }
+}
+
+// set a first message value
+changeMessage();
+// display the template in the #output div
+message(msg).render("output");
+
