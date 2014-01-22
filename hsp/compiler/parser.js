@@ -5,42 +5,44 @@ var klass = require("../klass");
 var blockParser = PEG.buildParser(grammar, {
     trackLineAndColumn : true
 });
+var hashspaceCompilerError = require("./error");
 
 /**
  * Return the list of instruction blocks that compose a template file at this stage the template AST is not complete -
  * cf. parse() function to get the complete syntax tree Note: this function is exposed for unit test purposes and should
  * not be used directly
  * @param {String} template the template to parse
+ * @param {String} fileName the file name (used for error messages)
  */
-function getBlockList (template) {
+function getBlockList (template, fileName) {
     // add a last line feed a the end of the template as the parser parses the plaintext
     // sequences only when ending with a new line sequence (workaround to solve pegjs issue)
-    return blockParser.parse(template + "\r\n");
+    if (typeof template != "string") {
+        throw hashspaceCompilerError({
+            description : "[Hashspace compiler] template argument is invalid: " + template
+        }, fileName);
+    }
+    try {
+        return blockParser.parse(template + "\r\n");
+    } catch (ex) {
+        throw hashspaceCompilerError([{
+                    description : ex.toString(),
+                    line : ex.line,
+                    column : ex.column
+                }], fileName);
+    }
 }
 exports.getBlockList = getBlockList;
 
-exports.parse = function (template) {
-    var res = {};
-    try {
-        var bl = getBlockList(template);
-        var st = new SyntaxTree();
-        st.generateTree(bl);
-        // st.displayErrors();
-        res = {
-            syntaxTree : st.tree.content,
-            errors : st.errors
-        };
-    } catch (ex) {
-        res = {
-            syntaxTree : null,
-            errors : [{
-                        description : ex.toString(),
-                        line : ex.line,
-                        column : ex.column
-                    }]
-        };
+exports.parse = function (template, fileName) {
+    var bl = getBlockList(template, fileName);
+    var st = new SyntaxTree();
+    st.generateTree(bl);
+    // st.displayErrors();
+    if (st.errors.length > 0) {
+        throw hashspaceCompilerError(st.errors, fileName);
     }
-    return res;
+    return st.tree.content;
 };
 
 /**
@@ -127,7 +129,7 @@ var SyntaxTree = klass({
         } else {
             n.args = b.args;
         }
-        n.export = b.mod === "export";
+        n["export"] = b.mod === "export";
         n.startLine = b.line;
         n.endLine = b.endLine;
         n.content = [];
