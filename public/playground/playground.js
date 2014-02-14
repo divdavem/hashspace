@@ -90,9 +90,9 @@ var Playground = module.exports = klass({
      */
     compileAndUpdate : function (fileName, newCode) {
         // alert(fileName+" : "+newCode);
-        var code = (newCode + '').replace(/\&/g, "\\u0026").replace(/\+/g, "\\u002B").replace(/\?/g, "\\u003F"), self = this;
+        var self = this;
 
-        jx.load("hsp/compile?src=" + code, function (error, code) {
+        var callback = function (error, code) {
             if (error) {
                 console.warn("[compileAndUpdate] " + error.text + " (" + error.status + ")");
             } else {
@@ -100,7 +100,7 @@ var Playground = module.exports = klass({
                 try {
                     // reset errors
                     d.errors.splice(0,d.errors.length);
-                    
+
                     log.removeAllLoggers();
                     log.addLogger(self.log.bind(self));
 
@@ -118,7 +118,18 @@ var Playground = module.exports = klass({
                             + ")");
                 }
             }
-        }, "text", "POST");
+        }
+
+        if (noder.require.cache["hsp/compiler/compile.js"] && noder.require.cache["hsp/transpiler/transpile.js"]) {
+            var compile = noder.require("hsp/compiler/compile");
+            var transpile = noder.require("hsp/transpiler/transpile");
+            var compiledCode = compile(newCode, fileName);
+            var transpiledCode = transpile(compiledCode, fileName);
+            callback(null, transpiledCode);
+        } else {
+            var code = (newCode + '').replace(/\&/g, "\\u0026").replace(/\+/g, "\\u002B").replace(/\?/g, "\\u003F");
+            jx.load("hsp/compile?src=" + code, callback, "text", "POST");
+        }
     },
 
     /**

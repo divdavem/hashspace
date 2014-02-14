@@ -24,10 +24,19 @@
 <script type="text/javascript" src="/node_modules/noder-js/dist/browser/noder.js">
 {
     packaging : {
-        baseUrl : "/"
+        baseUrl : "/",
+        preprocessors: [{
+              pattern : /\.hsp$/,
+              module: "hsp/compiler/compile"
+           }, {
+              pattern : /\.(hsp|js)$/,
+              module: "hsp/transpiler/transpile"
+           }]
     }
 }
 </script>
+<script type="text/javascript" src="/dist/0.0.2-SNAPSHOT/hashspace-noder.min.js"></script>
+<script type="text/javascript" src="/dist/0.0.2-SNAPSHOT/hashspace-noder-compiler.min.js"></script>
 <link href="/css/main.css" type="text/css" rel="stylesheet"/>
 
 </head>
