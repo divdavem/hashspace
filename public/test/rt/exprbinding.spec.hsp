@@ -24,13 +24,18 @@ function changeValue (data,val) {
     $set(data.object,"value",val);
 }
 
-# template test1(data) 
+# template displayValue(value)
+    <input class="in3" type="text" value="{value}" />
+# /template
+
+# template test1(data)
     <input class="in1" type="text" value="{data.object.value}" />
     <input class="in2" type="text" value="{data.object.value}" />
+    <#displayValue value="{data.object.value}"/>
 # /template
 
 describe("Expression Bindings", function () {
-    var INPUT1=".in1", INPUT2=".in2";
+    var INPUT1=".in1", INPUT2=".in2", INPUT3=".in3";
 
     it("validates bindings with value change", function() {
         var h=ht.newTestContext(), dm={object:{value:"initial value"}};
@@ -38,12 +43,15 @@ describe("Expression Bindings", function () {
 
         expect(h(INPUT1).value()).to.equal("initial value");
         expect(h(INPUT2).value()).to.equal("initial value");
+        expect(h(INPUT3).value()).to.equal("initial value");
+
 
         changeValue(dm,"v1");
         h.refresh();
 
         expect(h(INPUT1).value()).to.equal("v1");
         expect(h(INPUT2).value()).to.equal("v1");
+        expect(h(INPUT3).value()).to.equal("v1");
 
         h.$dispose();
     });
@@ -57,18 +65,21 @@ describe("Expression Bindings", function () {
 
         expect(h(INPUT1).value()).to.equal("v1");
         expect(h(INPUT2).value()).to.equal("v1");
+        expect(h(INPUT3).value()).to.equal("v1");
 
         changeValue(dm,"v2");
         h.refresh();
 
         expect(h(INPUT1).value()).to.equal("v2");
         expect(h(INPUT2).value()).to.equal("v2");
+        expect(h(INPUT3).value()).to.equal("v2");
 
         changeValueAndObject(dm,"v3");
         h.refresh();
 
         expect(h(INPUT1).value()).to.equal("v3");
         expect(h(INPUT2).value()).to.equal("v3");
+        expect(h(INPUT3).value()).to.equal("v3");
 
         h.$dispose();
     });

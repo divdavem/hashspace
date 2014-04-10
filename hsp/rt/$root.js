@@ -33,8 +33,8 @@ var CPT_TYPES={
 var DOCUMENT_FRAGMENT_NODE = 11;
 
 /**
- * Root node - created at the root of each template 
- * Contains the listeners requested by the child nodes 
+ * Root node - created at the root of each template
+ * Contains the listeners requested by the child nodes
  * Is replaced by the $CptNode (child class) when the template is inserted in another template
  */
 var $RootNode = klass({
@@ -384,8 +384,8 @@ var $CptNode = klass({
     createNodeInstance : function (parent) {
       var ni=null, vscope=parent.vscope, tp=this.tplPath;
 
-      // determine the type of this component: 
-      // - either a template - e.g. <#mytemplate foo="bar"/> 
+      // determine the type of this component:
+      // - either a template - e.g. <#mytemplate foo="bar"/>
       //   -> instance will extend $CptTemplate
       // - a component with controller - e.g. <#mycpt foo="bar"/>
       //   -> instance will extend $CptComponent
@@ -408,7 +408,7 @@ var $CptNode = klass({
         ni.initCpt({template:obj,ctlConstuctor:obj.controllerConstructor});
       } else if (obj) {
         if (obj.isCptAttElement) {
-          // insert attribute component 
+          // insert attribute component
           ni=this.createCptInstance("$CptAttInsert",parent);
           ni.initCpt(obj);
         }
@@ -455,7 +455,7 @@ var $CptNode = klass({
         ni.node = ni.parent.node;
         return ni;
     },
-    
+
     /**
      * Callback called when a controller attribute or a template attribute has changed
      */
@@ -504,7 +504,6 @@ var $CptNode = klass({
                     this.refreshAttributes();
                 }
             }
-            this.adirty = false;
         }
         TNode.refresh.call(this);
     },
@@ -559,7 +558,7 @@ var $CptNode = klass({
         var sz=pos.length;
 
         this._pathChgeCb = this.onPathChange.bind(this);
-    
+
         for (var i=0;sz>i;i++) {
             json.observe(pos[i], this._pathChgeCb);
         }
@@ -643,7 +642,7 @@ var $CptAttElement = klass({
     isCptAttElement : true,
 
     /**
-     * $CptAttElement generator 
+     * $CptAttElement generator
      */
     $constructor : function (name, exps, attcfg, ehcfg, children) {
         this.name = name;
@@ -657,7 +656,7 @@ var $CptAttElement = klass({
     },
 
     /**
-     * Tell this node can be found in a component content 
+     * Tell this node can be found in a component content
      * other (if false) the component will generate the default component content element
      */
     isValidCptAttElement:function () {
@@ -680,7 +679,7 @@ var $CptAttElement = klass({
                 if (p.ctlAttributes) {
                     attDef=p.ctlAttributes[this.name];
                 }
-                
+
                 if (!eltDef && !attDef) {
                     // invalid elt
                     log.error(this+" Element not supported by its parent component");
