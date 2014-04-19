@@ -183,7 +183,7 @@ var DataRefExpr = klass({
     getValue : function (vscope, eh, defvalue) {
         var v = this.isLiteral ? this.root : vscope[this.root], ppl = this.ppLength;
 
-        if (typeof v == "undefined") {
+        if (v == null) {
             // root not found
             return defvalue;
         }
@@ -195,13 +195,13 @@ var DataRefExpr = klass({
             var p = this.path;
             for (var i = 0; ppl > i; i++) {
                 v = v[p[i]];
-                if (v === undefined) {
+                if (v == null) {
                     return defvalue;
                 }
             }
         }
 
-        return (v !== undefined) ? v : defvalue;
+        return (v != null) ? v : defvalue;
     },
 
     /**
@@ -223,7 +223,7 @@ var DataRefExpr = klass({
             } else {
                 for (var i = 0; ppl - 1 > i; i++) {
                     v = v[this.path[i]];
-                    if (v === undefined) {
+                    if (v == null) {
                         goahead = false;
                         break;
                     }
@@ -257,7 +257,7 @@ var DataRefExpr = klass({
                 v=vscope;
             }
         }
-        if (v === undefined) {
+        if (v == null) {
             return null;
         }
         if (ppl === 1) {
@@ -269,7 +269,7 @@ var DataRefExpr = klass({
                 pp = p[i];
                 r.push([v, pp]);
                 v = v[pp];
-                if (v === undefined) {
+                if (v == null) {
                     break;
                 }
             }
@@ -319,7 +319,7 @@ var FuncRefExpr = klass({
             // short path for std use case
             scope = v;
             v = v[this.path[0]];
-            if (v === undefined) {
+            if (v == null) {
                 return defvalue;
             }
         } else {
@@ -327,7 +327,7 @@ var FuncRefExpr = klass({
             for (var i = 0; ppl > i; i++) {
                 scope = v;
                 v = v[p[i]];
-                if (v === undefined) {
+                if (v == null) {
                     return defvalue;
                 }
             }
@@ -344,7 +344,7 @@ var FuncRefExpr = klass({
      */
     getValue : function (vscope, eh, defvalue) {
         var res = this.executeCb({}, eh, vscope);
-        return (res === undefined) ? defvalue : res;
+        return (res == null) ? defvalue : res;
     },
 
     /**
@@ -524,7 +524,7 @@ var DynRefExpr = klass({
                 } else {
                     return defvalue;
                 }
-                if (v === undefined || v === null) {
+                if (v == null) {
                     return defvalue;
                 }
             }
@@ -576,7 +576,7 @@ var DynRefExpr = klass({
                     } else {
                         return;
                     }
-                    if (v === undefined || v === null) {
+                    if (v == null) {
                         return;
                     }
                 }
