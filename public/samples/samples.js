@@ -111,6 +111,14 @@ module.exports = [{
                         main : true
                     }]
         }, {
+            title : "Multi-line inputs: textarea elements",
+            folder : "textarea",
+            description : "description.md",
+            files : [{
+                        src : "textarea.hsp",
+                        main : true
+                    }]
+        }, {
             title : "Simple todo list",
             folder : "todolist",
             description : "description.md",
