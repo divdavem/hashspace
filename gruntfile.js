@@ -23,7 +23,7 @@ module.exports = function (grunt) {
       test: {
         options: {
           reporter: 'spec',
-          require: 'build/blanket' // comment this line out to disable coverage when debugging mocha tests
+//          require: 'build/blanket' // comment this line out to disable coverage when debugging mocha tests
         },
         src: [
           'test/compiler/**/*.js',
